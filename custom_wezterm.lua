@@ -20,9 +20,9 @@ end
 
 if wezterm.target_triple:find("windows") then
 	-- shell = { "powershell.exe", "-NoLogo" }
-	shell = { "pwsh.exe", "-NoLogo" }
+	-- shell = { "pwsh.exe", "-NoLogo" }
 	-- shell = { "cmd.exe" }
-	-- config.default_domain = "WSL:Arch" -- ✅ Force into the WSL domain
+	config.default_domain = "WSL:Arch" -- ✅ Force into the WSL domain
 
 	config.launch_menu = {
 		{ label = "Arch WSL", args = { "wsl.exe", "-d", "Arch" } },
@@ -121,12 +121,20 @@ end
 
 config.key_tables = {
 	resize_pane = {
+		--Manual
 		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
 		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }) },
 		{ key = "k", action = act.AdjustPaneSize({ "Up", 1 }) },
 		{ key = "l", action = act.AdjustPaneSize({ "Right", 1 }) },
+
+		--MAXIMIZE
+		{ key = "H", action = act.AdjustPaneSize({ "Left", 48 }) },
+		{ key = "J", action = act.AdjustPaneSize({ "Down", 48 }) },
+		{ key = "K", action = act.AdjustPaneSize({ "Up", 48 }) },
+		{ key = "L", action = act.AdjustPaneSize({ "Right", 48 }) },
+
+		-- Finish
 		{ key = "Escape", action = "PopKeyTable" },
-		{ key = "Enter", action = "PopKeyTable" },
 	},
 	move_tab = {
 		{ key = "h", action = act.MoveTabRelative(-1) },
