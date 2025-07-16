@@ -10,7 +10,7 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
-local shell = {}
+local fish_path = "/opt/homebrew/bin/fish"
 
 local config = {}
 -- Use config builder object if possible
@@ -18,39 +18,23 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-if wezterm.target_triple:find("windows") then
-	-- shell = { "powershell.exe", "-NoLogo" }
-	-- shell = { "pwsh.exe", "-NoLogo" }
-	-- shell = { "cmd.exe" }
-	config.default_domain = "WSL:Arch" -- ✅ Force into the WSL domain
-
-	config.launch_menu = {
-		{ label = "Arch WSL", args = { "wsl.exe", "-d", "Arch" } },
-		{ label = "CMD", args = { "cmd.exe" } },
-		{ label = "PowerShell", args = { "powershell.exe", "-NoLogo" } },
-		{ label = "pwsh_core", args = { "pwsh.exe", "-NoLogo" } },
-	}
-else
-	shell = { "/usr/bin/fish", "-l" }
-end
-
 -- Settings
-config.default_prog = shell
+config.default_prog = { fish_path, "-l" }
 
-config.color_scheme = "Dark Pastel"
+config.color_scheme = "Tokyo Night"
 config.font = wezterm.font_with_fallback({
-	{ family = "MesloLGS NF", weight = "Bold" },
-	{ family = "DengXian", weight = "Bold" },
+	{ family = "Iosevka Nerd Font", scale = 1.2, weight = "Medium" },
+	{ family = "FantasqueSansM Nerd Font", scale = 1.3 },
 })
-config.window_background_opacity = 0.88
+config.window_background_opacity = 0.9
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
-config.scrollback_lines = 30000
+config.scrollback_lines = 3000
 config.default_workspace = "main"
 
 -- Dim inactive panes
 config.inactive_pane_hsb = {
-	saturation = 0.8,
+	saturation = 0.24,
 	brightness = 0.5,
 }
 
@@ -121,20 +105,12 @@ end
 
 config.key_tables = {
 	resize_pane = {
-		--Manual
 		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
 		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }) },
 		{ key = "k", action = act.AdjustPaneSize({ "Up", 1 }) },
 		{ key = "l", action = act.AdjustPaneSize({ "Right", 1 }) },
-
-		--MAXIMIZE
-		{ key = "H", action = act.AdjustPaneSize({ "Left", 48 }) },
-		{ key = "J", action = act.AdjustPaneSize({ "Down", 48 }) },
-		{ key = "K", action = act.AdjustPaneSize({ "Up", 48 }) },
-		{ key = "L", action = act.AdjustPaneSize({ "Right", 48 }) },
-
-		-- Finish
 		{ key = "Escape", action = "PopKeyTable" },
+		{ key = "Enter", action = "PopKeyTable" },
 	},
 	move_tab = {
 		{ key = "h", action = act.MoveTabRelative(-1) },
@@ -154,7 +130,7 @@ config.tab_bar_at_bottom = false
 wezterm.on("update-status", function(window, pane)
 	-- Workspace name
 	local stat = window:active_workspace()
-	local stat_color = "#ff5"
+	local stat_color = "#f7768e"
 	-- It's a little silly to have workspace name all the time
 	-- Utilize this to display LDR or current key table name
 	if window:active_key_table() then
@@ -216,47 +192,15 @@ wezterm.on("update-status", function(window, pane)
 	}))
 end)
 
---window config
-config.background = {
-	{
-		source = {
-			-- it can be a little tricky because you must use the
-			-- path relative the wezterm.lua and not the current working directory
-
-			-- File = "/home/claud/Pictures/wallpapers/image1.jpg",
-			File = "./wezterm_setups/wallpapers/image.jpg",
-		},
-		hsb = {
-			hue = 1.0,
-			saturation = 1.02,
-			brightness = 5,
-		},
-		width = "100%",
-		height = "100%",
-		opacity = 0.58,
-	},
-	{
-		source = {
-			Color = "#000000",
-		},
-		width = "100%",
-		height = "100%",
-		opacity = 0.8,
-	},
-}
-
--- Appearance setting for when I need to take pretty screenshots
--- config.enable_tab_bar = false
+--[[ Appearance setting for when I need to take pretty screenshots
+config.enable_tab_bar = false
 config.window_padding = {
-	-- left = '0.5cell',
-	-- right = '0.5cell',
-	-- top = '0.5cell',
-	-- bottom = '0cell',
+  left = '0.5cell',
+  right = '0.5cell',
+  top = '0.5cell',
+  bottom = '0cell',
 
-	left = 0,
-	right = 0,
-	top = 0,
-	bottom = 0,
 }
+--]]
 
 return config
